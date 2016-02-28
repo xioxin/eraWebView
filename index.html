@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>era</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="./res/img/logo.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="192x192" href="./res/img/logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="era"/>
+    <link rel="apple-touch-icon-precomposed" href="./res/img/logo.png">
+    <meta name="msapplication-TileImage" content="./res/img/logo.png">
+    <meta name="msapplication-TileColor" content="#008080">
+    <link rel="stylesheet" href="./node_modules/angular-material/angular-material.css">
+    <link href="./res/css/angular-material.min.css" rel="stylesheet">
+    <link href="./res/css/material-icons.css" rel="stylesheet">
+    <link href="./res/css/style.css" rel="stylesheet" />
+</head>
+<body ng-app="app" ng-controller="con" layout="column">
+<div class="body" flex layout="column" ng-keypress="mykKeypress($event)">
+    <pre class="cli" ng-mobile-click="send0()" flex="grow"  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></pre>
+    <div class="footInput" ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}" id="footInput" flex="none" layout="row">
+        <md-button ng-mobile-click="openConfig($event)"  class="md-icon-button" aria-label="settings">
+            <i class="material-icons">settings</i>
+        </md-button>
+        <input ng-mobile-click="inputClick()" flex type="text" placeholder="填写要发送的内容" ng-model="msg" ng-readonly="config.virtualKeyboard"  pattern="{{config.digitalKeyboard?'[0-9]*':''}}"     id="input_text" value=""/>
+        <md-button class="md-icon-button" ng-mobile-click="send(msg)" aria-label="send">
+            <i class="material-icons">keyboard_return</i>
+        </md-button>
+    </div>
+    <div class="keyboard "  id="keyboard" flex="none"  ng-style="{height:virtualKeyboardShow&&config.virtualKeyboard?200:0}"  layout="row" >
+
+        <div ng-if="config.singleHandedly&&!config.singleHandedlyLeft" flex></div>
+        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="noshrink">
+            <div flex layout="row">
+                <md-button ng-mobile-click="kb(1)" flex>1</md-button>
+                <md-button ng-mobile-click="kb(2)" flex>2</md-button>
+                <md-button ng-mobile-click="kb(3)" flex>3</md-button>
+            </div>
+            <div flex layout="row">
+                <md-button ng-mobile-click="kb(4)" flex>4</md-button>
+                <md-button ng-mobile-click="kb(5)" flex>5</md-button>
+                <md-button ng-mobile-click="kb(6)" flex>6</md-button>
+            </div>
+            <div flex layout="row">
+                <md-button ng-mobile-click="kb(7)" flex>7</md-button>
+                <md-button ng-mobile-click="kb(8)" flex>8</md-button>
+                <md-button ng-mobile-click="kb(9)" flex>9</md-button>
+            </div>
+            <div flex layout="row"  ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}">
+                <md-button ng-mobile-click="kb('empty')" flex><i class="material-icons">delete_sweep</i></md-button>
+                <md-button ng-mobile-click="kb(0)" flex>0</md-button>
+                <md-button ng-mobile-click="kb('backspace')" flex><i class="material-icons">backspace</i></md-button>
+            </div>
+        </div>
+        <div ng-if="config.singleHandedly&&config.singleHandedlyLeft" flex></div>
+    </div>
+</div>
+<script type="text/ng-template" id="setIp">
+    <md-dialog aria-label="设置">
+        <form>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>设置服务器地址</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content >
+                <md-content class="md-padding">
+                    <form name="projectForm" >
+                        <md-input-container  class="md-block">
+                            <label>服务器</label>
+                            <md-select ng-model="serverListIndex" ng-change="serverListIndexChange()">
+                                <md-option value="">手动输入</md-option>
+                                <md-option value="{{ser}}" ng-repeat=" ser in serverList ">{{ser}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <div layout="row">
+                            <md-input-container class="md-block" flex>
+                                <label>IP</label>
+                                <input ng-model="server.ip" type="text">
+                            </md-input-container>
+                            <md-input-container class="md-block" style="width: 10px">
+                                <label>:</label>
+                            </md-input-container>
+                            <md-input-container class="md-block"  style="width: 90px">
+                                <label>端口</label>
+                                <input ng-model="server.port" type="text" pattern="[0-9]*" >
+                            </md-input-container>
+                        </div>
+                    </form>
+                </md-content>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="save()">
+                    完成
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<script type="text/ng-template" id="config">
+    <md-dialog aria-label="设置" class="md-dialog-fullscreen" style="width: 500px;">
+        <form>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2> <i class="material-icons" style=" vertical-align: bottom;">settings</i> 设置</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-show="!isEdit()" ng-click="save()">
+                        <md-icon class="material-icons">save</md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <md-icon class="material-icons" aria-label="Close dialog">close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-dialog-content  >
+                <md-tabs md-dynamic-height md-border-bottom>
+                    <md-tab label="系统设置">
+                        <md-content class="md-padding">
+                            <form >
+
+                                <md-switch ng-model="config.virtualKeyboard" aria-label="virtualKeyboard">
+                                    使用虚拟键盘（仅数字）
+                                </md-switch>
+                                <md-switch ng-show="config.virtualKeyboard" ng-model="config.singleHandedly" aria-label="singleHandedly">
+                                    单手模式
+                                </md-switch>
+                                <md-switch ng-show="config.virtualKeyboard" ng-model="config.singleHandedlyLeft" aria-label="singleHandedlyLeft">
+                                    惯用左手
+                                </md-switch>
+
+
+                                <md-switch ng-show="!config.virtualKeyboard" ng-model="config.digitalKeyboard" aria-label="digitalKeyboard">
+                                    使用数字键盘
+                                </md-switch>
+                                <md-switch ng-model="config.autoClear" aria-label="autoClear">
+                                    自动清理历史信息
+                                </md-switch>
+
+
+
+
+                                <md-input-container class="md-block" ng-show="config.autoClear">
+                                    <label>清理超过多少行的数据</label>
+                                    <input ng-model="config.autoClearNumber" type="text" pattern="[0-9]*">
+                                </md-input-container>
+
+                                <md-input-container class="md-block">
+                                    <label>字号</label>
+                                    <md-select ng-model="config.fontSize" style="width:100px;">
+                                        <md-option value="0">AUTO</md-option>
+                                        <md-option value="12">12px</md-option>
+                                        <md-option value="13">13px</md-option>
+                                        <md-option value="14">14px</md-option>
+                                        <md-option value="15">15px</md-option>
+                                        <md-option value="16">16px</md-option>
+                                        <md-option value="17">17px</md-option>
+                                        <md-option value="18">18px</md-option>
+                                        <md-option value="19">19px</md-option>
+                                        <md-option value="20">20px</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container class="md-block">
+                                    <label>行高</label>
+                                    <md-select ng-model="config.lineHeight" style="width:100px;">
+                                        <md-option value="0">AUTO</md-option>
+                                        <md-option value="1">   单倍</md-option>
+                                        <md-option value="1.1">1.1倍</md-option>
+                                        <md-option value="1.2">1.2倍</md-option>
+                                        <md-option value="1.3">1.3倍</md-option>
+                                        <md-option value="1.4">1.4倍</md-option>
+                                        <md-option value="1.5">1.5倍</md-option>
+                                        <md-option value="1.6">1.6倍</md-option>
+                                        <md-option value="1.7">1.7倍</md-option>
+                                        <md-option value="1.8">1.8倍</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+
+                                <md-button ng-show="!isDefault()" class="md-raised md-warn" ng-click="default()">还原默认设置</md-button>
+                                <md-button ng-show="serverList" class="md-raised md-warn" ng-click="emptyServerList()">清空服务器记录</md-button>
+
+
+
+
+                            </form>
+                        </md-content>
+                    </md-tab>
+                    <md-tab label="颜色设置">
+                        <md-content class="md-padding">
+                            <label style="line-height: 24px">
+                                <i class="material-icons text-b" style="color: rgb({{config.color.background.r}},{{config.color.background.g}},{{config.color.background.b}});">lens</i>
+                                背景色
+                            </label>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">R</span>
+                                </div>
+                                <md-slider flex min="0" max="255" ng-model="config.color.background.r" aria-label="red" id="red-slider" class></md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.background.r}}</div>
+
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">G</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.background.g" min="0" max="255" aria-label="green" id="green-slider" class="md-accent">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.background.g}}</div>
+
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">B</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.background.b" min="0" max="255" aria-label="blue" id="blue-slider" class="md-primary">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.background.b}}</div>
+
+                            </div>
+
+
+                            <label style="line-height: 24px">
+                                <i class="material-icons text-b" style="color: rgb({{config.color.text.r}},{{config.color.text.g}},{{config.color.text.b}});">lens</i>
+                                默认文字
+                            </label>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">R</span>
+                                </div>
+                                <md-slider flex min="0" max="255" ng-model="config.color.text.r" aria-label="red" id="red-slider" class></md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.text.r}}</div>
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">G</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.text.g" min="0" max="255" aria-label="green" id="green-slider" class="md-accent">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.text.g}}</div>
+
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">B</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.text.b" min="0" max="255" aria-label="blue" id="blue-slider" class="md-primary">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.text.b}}</div>
+                            </div>
+
+
+
+                           <!-- <label style="line-height: 24px">
+                                <i class="material-icons text-b" style="color: rgb({{config.color.button.r}},{{config.color.button.g}},{{config.color.button.b}});">lens</i>
+
+                                默认按钮
+                            </label>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">R</span>
+                                </div>
+                                <md-slider flex min="0" max="255" ng-model="config.color.button.r" aria-label="red" id="red-slider" class></md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.button.r}}</div>
+
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">G</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.button.g" min="0" max="255" aria-label="green" id="green-slider" class="md-accent">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.button.g}}</div>
+
+                            </div>
+                            <div layout>
+                                <div flex="10" layout layout-align="center center">
+                                    <span class="md-body-1">B</span>
+                                </div>
+                                <md-slider flex ng-model="config.color.button.b" min="0" max="255" aria-label="blue" id="blue-slider" class="md-primary">
+                                </md-slider>
+                                <div flex="10" layout layout-align="center center">{{config.color.button.b}}</div>
+                            </div>-->
+
+
+                        </md-content>
+                    </md-tab>
+                    <md-tab label="关于">
+                        <md-content class="md-padding">
+
+                            <p>后端开发：♡+.史莱姆|</p>
+                            <p>前端开发：Xin </p>
+
+                        </md-content>
+                    </md-tab>
+                </md-tabs>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="cancel()">
+                    取消
+                </md-button>
+                <md-button ng-show="!isEdit()" ng-click="save()"  >
+                    保存
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+<style>
+    .cli a{
+        color: rgb({{config.color.button.r}},{{config.color.button.g}},{{config.color.button.b}});
+    }
+    .cli{
+       color: rgb({{config.color.text.r}},{{config.color.text.g}},{{config.color.text.b}});
+    }
+    body,.body{
+        background: rgb({{config.color.background.r}},{{config.color.background.g}},{{config.color.background.b}});
+    }
+</style>
+<style ng-if="config.fontSize>0">
+    .cli{
+        font-size: {{config.fontSize}}px;
+    }
+</style>
+<style ng-if="config.lineHeight>0">
+    .cli{
+        line-height: {{config.lineHeight}};
+    }
+</style>
+<script src="./res/js/jquery.min.js"></script>
+<script src="./res/js/angular.min.js"></script>
+<script src="./res/js/angular-animate.min.js"></script>
+<script src="./res/js/angular-aria.min.js"></script>
+<script src="./res/js/angular-websocket.min.js"></script>
+<script src="./res/js/angular-material.min.js"></script>
+<script src="./res/js/app.js"></script>
+</body>
+</html>

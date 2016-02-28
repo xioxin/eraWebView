@@ -1,0 +1,137 @@
+@font-face{
+    font-family: 'envy_code_r-webfont';
+    src: url('envy_code_r-webfont.eot');
+    src: url('envy_code_r-webfont.eot?#iefix') format('embedded-opentype'),
+    url('envy_code_r-webfont.woff') format('woff'),
+    url('envy_code_r-webfont.ttf') format('truetype'),
+    url('envy_code_r-webfont.svg#webfont') format('svg');
+}
+* {
+    box-sizing: border-box;
+}
+html{
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+    -ms-touch-action: manipulation;
+}
+body{
+    background: #333;
+    height: 100%;
+    overflow: hidden;
+}
+.body{
+    background: #333;
+    color: #fff;
+    max-width: 1000px;
+    margin: 0 auto;;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.cli .material-icons{
+    font-size: inherit;
+    line-height: inherit;
+}
+.cli a{
+    color: #fff;
+    text-decoration: none;
+}
+.cli{
+    height: 100%;
+    overflow: auto;
+    font-size: 16px;;
+    padding: 10px;
+    padding-bottom: 20px;
+    line-height: 1.3;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: monospace;
+    -webkit-overflow-scrolling: touch;
+}
+.cli span[ng-click]{
+    cursor:pointer;
+    text-shadow: 0 0 2px rgba(0,0,0,1) ;
+}
+.cli span[ng-mobile-click]{
+    cursor:pointer;
+    text-shadow: 0 0 2px rgba(0,0,0,1) ;
+}
+
+
+.por{
+    position: relative;
+    margin: 0 10px;
+}
+
+.text-preview {
+    padding: 20px;
+}
+.md-color-picker-dialog{
+    overflow: auto;
+    overflow-x: hidden;
+    /*max-height: 100%;*/
+}
+
+
+.footInput{
+    background: #fff;
+    color:#666;
+    height: 50px;
+}
+.footInput .md-button.md-icon-button{
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+}
+
+#input_text{
+    background: none;
+    border: none;
+}
+.colorBox{
+    display: inline-block;
+    height: 40px;
+    width: 30px;
+    background: #000;
+}
+.text-b{
+    text-shadow:0px 1px 2px rgba(0,0,0,0.3) ;
+    vertical-align: middle;
+}
+.md-slider{
+    margin-right: 40px;
+}
+.keyboard{
+    background: #fff;
+    color:#333;
+    transition: height 0.3s;
+    -moz-transition: height 0.3s;
+    -webkit-transition: height 0.3s;
+    -o-transition: height 0.3s;
+}
+.singleHandedly{
+    width: 150px;
+}
+.singleHandedlyInput{
+    flex-direction:row-reverse !important;
+}
+.keyboard i{
+    vertical-align: middle;
+}
+
+
+/* 横向放置的手机和竖向放置的平板之间的分辨率 */
+@media (max-width: 767px) {
+    .cli{
+        font-size: 12px;;
+    }
+}
+
+/* 横向放置的手机及分辨率更小的设备 */
+@media (max-width: 480px) {
+    .cli {
+        font-size: 12px;;
+    }
+}

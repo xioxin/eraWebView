@@ -71,6 +71,7 @@ app.directive("ngMobileClick", [function () {
                 //console.log(message);
                 addSaver($scope.server.ip+':'+ $scope.server.port);
                 echo("sys",'<i class="material-icons" style="color:#03a9f4">info_outline</i> 已建立连接');
+                io.send('ErAXiN');
             });
             io.onClose(function(message) {
                 //console.log(message);

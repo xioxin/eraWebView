@@ -19,8 +19,8 @@ app.directive('stringMsg' , function($compile){
                 var msg = html.msg
                     .replace(/<a/g, "<span")
                     .replace(/<\/a/g, "</span")
-                    .replace(/i=\\"(\w*?)\\"/g, "ng-mobile-click='buttonSend(\"$1\",$event)'")
-                    .replace(/c=(\w+).(\w+).(\w+).(\w+)/g, "style='color:rgba($2,$3,$4,1)'")
+                    .replace(/i="(\w*?)"/g, "ng-mobile-click='buttonSend(\"$1\",$event)'")
+                    .replace(/c="(\w+).(\w+).(\w+).(\w+)"/g, "style='color:rgba($2,$3,$4,1)'")
                     .replace(/  /g, "　");
                 el.html($compile(msg)(scope));
             });
@@ -109,14 +109,17 @@ app.directive("ngMobileClick", [function () {
        }
 
        function addSaver(wsurl){
-           if(localStorage.getItem('serverList')){
-               $scope.serverList = JSON.parse(localStorage.getItem('serverList'));
-           }else{
-               $scope.serverList = [];
-           }
-           if($scope.serverList.indexOf(wsurl)==-1){
-               $scope.serverList.splice(0,0,wsurl);
-               localStorage.setItem('serverList',JSON.stringify($scope.serverList))
+
+           if(window.localStorage) {
+               if (localStorage.getItem('serverList')) {
+                   $scope.serverList = JSON.parse(localStorage.getItem('serverList'));
+               } else {
+                   $scope.serverList = [];
+               }
+               if ($scope.serverList.indexOf(wsurl) == -1) {
+                   $scope.serverList.splice(0, 0, wsurl);
+                   localStorage.setItem('serverList', JSON.stringify($scope.serverList))
+               }
            }
        }
        $scope.virtualKeyboardShow = false;
@@ -148,20 +151,24 @@ app.directive("ngMobileClick", [function () {
                 'button'     : {r:255,g:240,b:180}
             }
         };
-
-       if(localStorage.getItem('config')){
-           $scope.config = JSON.parse(localStorage.getItem('config'));
+       if(window.localStorage) {
+           if (localStorage.getItem('config')) {
+               $scope.config = JSON.parse(localStorage.getItem('config'));
+           } else {
+               $scope.config = JSON.parse(JSON.stringify(defaultConfig));
+           }
        }else{
            $scope.config = JSON.parse(JSON.stringify(defaultConfig));
        }
         $scope.openConfig = function(ev) {
             $mdDialog.show({
                 controller:['$scope', '$mdDialog', function($scopeIn, $mdDialogIn){
-
-                    if(localStorage.getItem('serverList')){
-                        $scopeIn.serverList = JSON.parse(localStorage.getItem('serverList'));
-                    }else{
-                        $scopeIn.serverList = [];
+                    if(window.localStorage) {
+                        if (localStorage.getItem('serverList')) {
+                            $scopeIn.serverList = JSON.parse(localStorage.getItem('serverList'));
+                        } else {
+                            $scopeIn.serverList = [];
+                        }
                     }
 
                     $scopeIn.old = JSON.parse(JSON.stringify($scope.config));
@@ -176,7 +183,9 @@ app.directive("ngMobileClick", [function () {
                         return  JSON.stringify($scopeIn.config) == JSON.stringify( $scopeIn.old );
                     };
                     $scopeIn.save = function() {
-                        localStorage.setItem("config",JSON.stringify($scopeIn.config ));
+                        if(window.localStorage) {
+                            localStorage.setItem("config", JSON.stringify($scopeIn.config));
+                        }
                         $scope.config = JSON.parse(JSON.stringify($scopeIn.config ));
                         $mdDialogIn.cancel();
                     };
@@ -185,7 +194,9 @@ app.directive("ngMobileClick", [function () {
                         $mdDialogIn.cancel();
                     };
                     $scopeIn.emptyServerList = function(){
-                        localStorage.removeItem('serverList');
+                        if(window.localStorage) {
+                            localStorage.removeItem('serverList');
+                        }
                         $scopeIn.serverList = false;
                     }
                 }],
@@ -202,11 +213,14 @@ app.directive("ngMobileClick", [function () {
                 controller:['$scope', '$mdDialog', function($scopeIn, $mdDialogIn){
 
 
-                    if(localStorage.getItem('serverList')){
-                        $scopeIn.serverList = JSON.parse(localStorage.getItem('serverList'));
-                    }else{
-                        $scopeIn.serverList = [];
+                    if(window.localStorage) {
+                        if (localStorage.getItem('serverList')) {
+                            $scopeIn.serverList = JSON.parse(localStorage.getItem('serverList'));
+                        } else {
+                            $scopeIn.serverList = [];
+                        }
                     }
+
                     $scopeIn.serverListIndex = '';
                     $scopeIn.serverListIndexChange = function(){
                         if($scopeIn.serverListIndex){

@@ -27,11 +27,11 @@
     <pre class="cli" ng-mobile-click="send0()" flex="grow"  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></pre>
     <div class="footInput" ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}" id="footInput" flex="none" layout="row">
         <md-button ng-mobile-click="openConfig($event)"  class="md-icon-button" aria-label="settings">
-            <i class="material-icons">settings</i>
+            <i class="material-icons">&#xE8B8;</i>
         </md-button>
         <input ng-mobile-click="inputClick()" flex type="text" placeholder="填写要发送的内容" ng-model="msg" ng-readonly="config.virtualKeyboard"  pattern="{{config.digitalKeyboard?'[0-9]*':''}}"     id="input_text" value=""/>
         <md-button class="md-icon-button" ng-mobile-click="send(msg)" aria-label="send">
-            <i class="material-icons">keyboard_return</i>
+            <i class="material-icons">&#xE31B;</i>
         </md-button>
     </div>
     <div class="keyboard "  id="keyboard" flex="none"  ng-style="{height:virtualKeyboardShow&&config.virtualKeyboard?200:0}"  layout="row" >

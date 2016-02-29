@@ -112,7 +112,16 @@ body{
 .keyboard i{
     vertical-align: middle;
 }
-
+.translate{
+        position: fixed;
+    right: 0;
+    top: 0;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 0 0 0 10px;
+    /* color: #fff; */
+    text-align: right;
+}
 
 /* 横向放置的手机和竖向放置的平板之间的分辨率 */
 @media (max-width: 767px) {

@@ -35,7 +35,7 @@
     </div>
     <div class="keyboard "  id="keyboard" flex="none"  ng-class="{'keyboardShow':virtualKeyboardShow&&config.virtualKeyboard}"  layout="row" >
         <div ng-if="config.singleHandedly&&!config.singleHandedlyLeft" flex="100"></div>
-        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="initial" >
+        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="{{config.singleHandedly?'initial':'100'}}" >
             <div flex layout="row">
                 <md-button ng-mobile-click="kb(1)" flex>1</md-button>
                 <md-button ng-mobile-click="kb(2)" flex>2</md-button>

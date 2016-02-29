@@ -17,14 +17,13 @@
     <link rel="apple-touch-icon-precomposed" href="./res/img/logo.png">
     <meta name="msapplication-TileImage" content="./res/img/logo.png">
     <meta name="msapplication-TileColor" content="#008080">
-    <link rel="stylesheet" href="./node_modules/angular-material/angular-material.css">
     <link href="./res/css/angular-material.min.css" rel="stylesheet">
     <link href="./res/css/material-icons.css" rel="stylesheet">
     <link href="./res/css/style.css" rel="stylesheet" />
 </head>
-<body ng-app="app" ng-controller="con" layout="column">
+<body ng-app="app" ng-controller="con" layout="column" ng-class="{'noEffect':config.noEffect}">
 <div class="body" flex layout="column" ng-keypress="mykKeypress($event)">
-    <pre class="cli" ng-mobile-click="send0()" flex="grow"  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></pre>
+    <div class="cli" ng-mobile-click="send0()" flex="grow"  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></div>
     <div class="footInput" ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}" id="footInput" flex="none" layout="row">
         <md-button ng-mobile-click="openConfig($event)"  class="md-icon-button" aria-label="settings">
             <i class="material-icons">&#xE8B8;</i>
@@ -34,10 +33,9 @@
             <i class="material-icons">&#xE31B;</i>
         </md-button>
     </div>
-    <div class="keyboard "  id="keyboard" flex="none"  ng-style="{height:virtualKeyboardShow&&config.virtualKeyboard?200:0}"  layout="row" >
-
-        <div ng-if="config.singleHandedly&&!config.singleHandedlyLeft" flex></div>
-        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="noshrink">
+    <div class="keyboard "  id="keyboard" flex="none"  ng-class="{'keyboardShow':virtualKeyboardShow&&config.virtualKeyboard}"  layout="row" >
+        <div ng-if="config.singleHandedly&&!config.singleHandedlyLeft" flex="100"></div>
+        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="initial" >
             <div flex layout="row">
                 <md-button ng-mobile-click="kb(1)" flex>1</md-button>
                 <md-button ng-mobile-click="kb(2)" flex>2</md-button>
@@ -59,7 +57,7 @@
                 <md-button ng-mobile-click="kb('backspace')" flex><i class="material-icons">backspace</i></md-button>
             </div>
         </div>
-        <div ng-if="config.singleHandedly&&config.singleHandedlyLeft" flex></div>
+        <div ng-if="config.singleHandedly&&config.singleHandedlyLeft" flex="100"></div>
     </div>
 </div>
 <script type="text/ng-template" id="setIp">
@@ -108,9 +106,9 @@
     </md-dialog>
 </script>
 <script type="text/ng-template" id="config">
-    <md-dialog aria-label="设置" class="md-dialog-fullscreen" style="width: 500px;">
-        <form>
-            <md-toolbar>
+    <md-dialog aria-label="设置"  layout="column" class="md-dialog-fullscreen" style="width: 500px; height: 900px">
+        <form flex  layout="column">
+            <md-toolbar flex="initial">
                 <div class="md-toolbar-tools">
                     <h2> <i class="material-icons" style=" vertical-align: bottom;">settings</i> 设置</h2>
                     <span flex></span>
@@ -122,8 +120,8 @@
                     </md-button>
                 </div>
             </md-toolbar>
-            <md-dialog-content  >
-                <md-tabs md-dynamic-height md-border-bottom>
+            <md-dialog-content flex="grow"  layout="column"  >
+                <md-tabs flex="grow"  md-stretch-tabs="always"  md-swipe-content md-enable-disconnect  md-center-tabs   md-border-bottom>
                     <md-tab label="系统设置">
                         <md-content class="md-padding">
                             <form >
@@ -137,11 +135,15 @@
                                 <md-switch ng-show="config.virtualKeyboard" ng-model="config.singleHandedlyLeft" aria-label="singleHandedlyLeft">
                                     惯用左手
                                 </md-switch>
-
-
                                 <md-switch ng-show="!config.virtualKeyboard" ng-model="config.digitalKeyboard" aria-label="digitalKeyboard">
                                     使用数字键盘
                                 </md-switch>
+
+                                <md-switch ng-model="config.noEffect" aria-label="autoClear">
+                                    低特效 (微弱的提高性能 大概)
+                                </md-switch>
+
+
                                 <md-switch ng-model="config.autoClear" aria-label="autoClear">
                                     自动清理历史信息
                                 </md-switch>
@@ -158,6 +160,10 @@
                                     <label>字号</label>
                                     <md-select ng-model="config.fontSize" style="width:100px;">
                                         <md-option value="0">AUTO</md-option>
+                                        <md-option value="8">8px</md-option>
+                                        <md-option value="9">9px</md-option>
+                                        <md-option value="10">10px</md-option>
+                                        <md-option value="11">11px</md-option>
                                         <md-option value="12">12px</md-option>
                                         <md-option value="13">13px</md-option>
                                         <md-option value="14">14px</md-option>
@@ -169,6 +175,10 @@
                                         <md-option value="20">20px</md-option>
                                     </md-select>
                                 </md-input-container>
+                                <p>
+                                    缩小字号可以在手机中显示更多文字 但是游戏中的按钮将难以点击 <br/>
+                                    pc端最小字号为12px
+                                </p>
 
                                 <md-input-container class="md-block">
                                     <label>行高</label>
@@ -183,11 +193,36 @@
                                         <md-option value="1.6">1.6倍</md-option>
                                         <md-option value="1.7">1.7倍</md-option>
                                         <md-option value="1.8">1.8倍</md-option>
+                                        <md-option value="1.9">1.9倍</md-option>
+                                        <md-option value="2.0">2.0倍</md-option>
+                                        <md-option value="2.1">2.1倍</md-option>
+                                        <md-option value="2.2">2.2倍</md-option>
+                                        <md-option value="2.3">2.3倍</md-option>
+                                        <md-option value="2.4">2.4倍</md-option>
+                                        <md-option value="2.5">2.5倍</md-option>
                                     </md-select>
                                 </md-input-container>
+                                <p>推荐触控设备增加行高 可避免游戏中的按钮点偏</p>
+
+                                <md-input-container class="md-block">
+                                    <label>字距</label>
+                                    <md-select ng-model="config.letterSpacing" style="width:100px;">
+                                        <md-option value="5">+5</md-option>
+                                        <md-option value="4">+4</md-option>
+                                        <md-option value="3">+3</md-option>
+                                        <md-option value="2">+2</md-option>
+                                        <md-option value="1">+1</md-option>
+                                        <md-option value="0">0</md-option>
+                                        <md-option value="-1">-1</md-option>
+                                        <md-option value="-2">-2</md-option>
+                                        <md-option value="-3">-3</md-option>
+                                        <md-option value="-4">-4</md-option>
+                                        <md-option value="-5">-5</md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <p>缩短字距可以显示更多内容 但是文字会重叠</p>
 
 
-                                <md-button ng-show="!isDefault()" class="md-raised md-warn" ng-click="default()">还原默认设置</md-button>
                                 <md-button ng-show="serverList" class="md-raised md-warn" ng-click="emptyServerList()">清空服务器记录</md-button>
 
 
@@ -296,16 +331,27 @@
                         </md-content>
                     </md-tab>
                     <md-tab label="关于">
-                        <md-content class="md-padding">
-
-                            <p>后端开发：♡+.史莱姆|</p>
-                            <p>前端开发：Xin </p>
+                        <md-content class="md-padding" >
+                            <h3>ERA 网页版客户端</h3>
+                            <p>
+                                配合 <code>♡+.史莱姆|</code> 开发的服务端使用
+                            </p>
+                            <h5>用到的组件</h5>
+                            <ul style="color: rgba(0, 0, 0, 0.35);">
+                                <li>Angular</li>
+                                <li>jquery</li>
+                                <li>Angular Material</li>
+                                <li>fastclick</li>
+                            </ul>
+                            <md-button class="md-raised" href="https://github.com/xioxin/eraWebView" md-autofocus target="_blank">Fork me on github</md-button>
+                            <p style="text-align: right;"> Xin</p>
 
                         </md-content>
                     </md-tab>
                 </md-tabs>
             </md-dialog-content>
-            <md-dialog-actions layout="row">
+            <md-dialog-actions flex="initial" style="height:52px;" layout="row">
+                <md-button ng-show="!isDefault()" class="md-warn" ng-click="default()">还原默认设置</md-button>
                 <span flex></span>
                 <md-button ng-click="cancel()">
                     取消
@@ -323,6 +369,7 @@
     }
     .cli{
        color: rgb({{config.color.text.r}},{{config.color.text.g}},{{config.color.text.b}});
+        letter-spacing:{{config.letterSpacing}}px;
     }
     body,.body{
         background: rgb({{config.color.background.r}},{{config.color.background.g}},{{config.color.background.b}});
@@ -344,19 +391,18 @@
 <script src="./res/js/angular-aria.min.js"></script>
 <script src="./res/js/angular-websocket.min.js"></script>
 <script src="./res/js/angular-material.min.js"></script>
+<script src="./res/js/fastclick.js"></script>
 <script src="./res/js/app.js"></script>
 
 
 <div class="translate">
-    
-    <div id="google_translate_element"></div><script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-CN,zh-TW', multilanguagePage: true}, 'google_translate_element');
-}
-</script><script type="text/javascript" src="//translate.google.cn/translate_a/element.js?cb=googleTranslateElementInit"></script>
-        
-    
+    <div id="google_translate_element"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.cn/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </div>
-
 </body>
 </html>

@@ -8,6 +8,16 @@ function isPhone(){
     return false;
 }
 var app = angular.module( 'app', [ 'ngMaterial','ngWebSocket'] );
+app.run(function() {
+        FastClick.attach($('.cli').get(0));
+        $('.cli').on("click","span[i]", function(event){
+            buttonSend($(this).attr('i'));
+            event.stopPropagation();
+            return false;
+        });
+    });
+
+
 var msgDiv = document.getElementById("messagewindow")
 app.directive('stringMsg' , function($compile){
     return function(scope , el , attr){
@@ -19,7 +29,7 @@ app.directive('stringMsg' , function($compile){
                 var msg = html.msg
                     .replace(/<a/g, "<span")
                     .replace(/<\/a/g, "</span")
-                    .replace(/i="(\w*?)"/g, "ng-mobile-click='buttonSend(\"$1\",$event)'")
+                    //.replace(/i="(\w*?)"/g, "ng-mobile-click='buttonSend(\"$1\",$event)'")
                     .replace(/c="(\w+).(\w+).(\w+).(\w+)"/g, "style='color:rgba($2,$3,$4,1)'")
                     .replace(/  /g, "　");
                 el.html($compile(msg)(scope));
@@ -145,7 +155,9 @@ app.directive("ngMobileClick", [function () {
             'virtualKeyboard':isPhone(),
             'singleHandedly':false,
             'singleHandedlyLeft':false,
+            'noEffect':false,
             'lineHeight':0,
+            'letterSpacing':-1,
             'color':{
                 'background' : {r:50,g:50,b:50},
                 'text'   : {r:230,g:230,b:230},
@@ -287,6 +299,18 @@ app.directive("ngMobileClick", [function () {
            }
            $event.stopPropagation();
        }
+
+       window.buttonSend = function(msg){
+           if(io){
+               if(msg){
+                   io.send(msg);
+               }else{
+                   io.send('\0');
+               }
+           }
+           $scope.$apply();
+       };
+
        $scope.mykKeypress = function(e){
            var keycode = window.event?e.keyCode:e.which;
            if(keycode==13){

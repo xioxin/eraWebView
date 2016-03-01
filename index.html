@@ -402,7 +402,20 @@
             new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="//translate.google.cn/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
+
+    <div class="inscript">
+        <p style="color:rgba(255,255,255,0.5);padding: 0;margin:0;"><button>加载google翻译组件</button> 需正确上网姿势</p>
+    </div>
+
 </div>
+<script>
+$('.inscript button').click(function(){
+    $('.inscript').html('<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></'+'script>')
+});
+</script>
+
 </body>
 </html>

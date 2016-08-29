@@ -72,7 +72,13 @@ app.directive("ngMobileClick", [function () {
         });
     }
 }]);
-
+app.directive("ngMobileClick2", [function () {
+    return function (scope, elem, attrs) {
+        elem.bind("touchend", function (e) {
+            scope.$apply(attrs["ngMobileClick"]);
+        });
+    }
+}]);
 
 app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,$window) {
 

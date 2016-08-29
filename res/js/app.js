@@ -29,13 +29,13 @@ function iosV(){
 
 var app = angular.module( 'app', [ 'ngMaterial','ngWebSocket'] );
 app.run(function($timeout) {
-        $('.cli').on("click","span[i]", function(event){
-            var $this = $(this);
-            buttonSend($this.attr('i'));
-            $this.addClass('onclick');
-            event.stopPropagation();
-            return false;
-        });
+        //$('.cli').on("click","span[i]", function(event){
+        //    var $this = $(this);
+        //    buttonSend($this.attr('i'));
+        //    $this.addClass('onclick');
+        //    event.stopPropagation();
+        //    return false;
+        //});
     });
 
 
@@ -48,7 +48,7 @@ app.directive('stringMsg' , function($compile){
                 var msg = html.msg
                     .replace(/<a/g, "<span")
                     .replace(/<\/a/g, "</span")
-                    //.replace(/i="(\w*?)"/g, "ng-mobile-click='buttonSend(\"$1\",$event)'")
+                    .replace(/i="(\w*?)"/g, "ng-click='buttonSend(\"$1\",$event)'")
                     .replace(/c="(\w+).(\w+).(\w+).(\w+)"/g, "style='color:rgba($2,$3,$4,1)'")
                     .replace(/  /g, "　");
                 el.html($compile(msg)(scope));
@@ -343,7 +343,7 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
            }
        };
        $scope.buttonSend = function(msg,$event){
-           console.log(msg,$event);
+           $event.currentTarget.className='onclick';
            if(io){
                if(msg){
                    io.send(msg);

@@ -20,6 +20,7 @@ body{
     position: relative;
     box-sizing: border-box;
     width: 100%;
+
 }
 
 .cli .material-icons{
@@ -120,7 +121,7 @@ body{
     vertical-align: middle;
 }
 .translate{
-        position: fixed;
+        position: absolute;
     right: 0;
     top: 0;
     left: 0;
@@ -130,7 +131,24 @@ body{
     -webkit-backdrop-filter: blur(5px);
     overflow: hidden;
     font-size: 12px;
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    box-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+.translate button{
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.statusbar-overlay .translate{
+    padding-top: 25px;
+}
+.statusbar-overlay md-toolbar {
+    padding-top: 20px;
+}
+.statusbar-overlay .goog-te-banner-frame{
+    top:20px;
 }
 
 /* 横向放置的手机和竖向放置的平板之间的分辨率 */
@@ -166,6 +184,38 @@ form p{
     -webkit-backdrop-filter: none !important;
     text-shadow: none !important;
 }
+
+.winRotate {
+    padding-left: 20px;
+    transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    -webkit-flex: 0 0 auto !important;
+    -ms-flex: 0 0 auto !important;
+    flex: 0 0 auto !important;
+    box-sizing: border-box
+}
+.winRotate90{
+    transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    -o-transform:rotate(-90deg);
+}
+.keyboardBoxSingleHandedly{
+    padding-top: 30px;
+    width:200px;
+    height: 100%;
+    max-height: 300px;
+}
+.onclick{
+    outline: 1px solid #9E9E9E;
+    border-radius: 3px ;
+
+}
+
+
+
 /*
 
 

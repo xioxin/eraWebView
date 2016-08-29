@@ -12,52 +12,81 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" sizes="192x192" href="./res/img/logo.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="era"/>
     <link rel="apple-touch-icon-precomposed" href="./res/img/logo.png">
     <meta name="msapplication-TileImage" content="./res/img/logo.png">
     <meta name="msapplication-TileColor" content="#008080">
     <link href="./res/css/angular-material.min.css" rel="stylesheet">
     <link href="./res/css/material-icons.css" rel="stylesheet">
-    <link href="./res/css/style.css" rel="stylesheet" />
+    <link href="./res/css/style.css?6" rel="stylesheet" />
 </head>
-<body ng-app="app" ng-controller="con" layout="column" ng-class="{'noEffect':config.noEffect}">
-<div class="body" flex layout="column" ng-keypress="mykKeypress($event)">
-    <div class="cli" ng-mobile-click="send0()" flex="grow"  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></div>
-    <div class="footInput" ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}" id="footInput" flex="none" layout="row">
-        <md-button ng-mobile-click="openConfig($event)"  class="md-icon-button" aria-label="settings">
-            <i class="material-icons">&#xE8B8;</i>
-        </md-button>
-        <input ng-mobile-click="inputClick()" flex type="text" placeholder="填写要发送的内容" ng-model="msg" ng-readonly="config.virtualKeyboard"  pattern="{{config.digitalKeyboard?'[0-9]*':''}}"     id="input_text" value=""/>
-        <md-button class="md-icon-button" ng-mobile-click="send(msg)" aria-label="send">
-            <i class="material-icons">&#xE31B;</i>
-        </md-button>
-    </div>
-    <div class="keyboard "  id="keyboard" flex="none"  ng-class="{'keyboardShow':virtualKeyboardShow&&config.virtualKeyboard}"  layout="row" >
-        <div ng-if="config.singleHandedly&&!config.singleHandedlyLeft" flex="100"></div>
-        <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex="{{config.singleHandedly?'initial':'100'}}" >
-            <div flex layout="row">
-                <md-button ng-mobile-click="kb(1)" flex>1</md-button>
-                <md-button ng-mobile-click="kb(2)" flex>2</md-button>
-                <md-button ng-mobile-click="kb(3)" flex>3</md-button>
-            </div>
-            <div flex layout="row">
-                <md-button ng-mobile-click="kb(4)" flex>4</md-button>
-                <md-button ng-mobile-click="kb(5)" flex>5</md-button>
-                <md-button ng-mobile-click="kb(6)" flex>6</md-button>
-            </div>
-            <div flex layout="row">
-                <md-button ng-mobile-click="kb(7)" flex>7</md-button>
-                <md-button ng-mobile-click="kb(8)" flex>8</md-button>
-                <md-button ng-mobile-click="kb(9)" flex>9</md-button>
-            </div>
-            <div flex layout="row"  ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}">
-                <md-button ng-mobile-click="kb('empty')" flex><i class="material-icons">delete_sweep</i></md-button>
-                <md-button ng-mobile-click="kb(0)" flex>0</md-button>
-                <md-button ng-mobile-click="kb('backspace')" flex><i class="material-icons">backspace</i></md-button>
+<body ng-app="app"
+      ng-controller="con"
+      layout="column"
+      ng-class="{
+      'noEffect':config.noEffect,
+      'statusbar-overlay':standalone
+      }"
+        >
+<div class="body"
+     ng-style="winRotateCss"
+     ng-class="{
+      'winRotate':config.rotate,
+      'winRotate90':config.rotate&&config.rotate90,
+      }"
+     flex
+     layout="{{config.singleHandedly?'row':'column'}}"
+     layout-align="{{config.singleHandedly?'start end':'start stretch'}}"
+     ng-keypress="mykKeypress($event)"  ng-mobile-click="send0()">
+<!--&&config.singleHandedlyLeft-->
+
+    <div class="cli" flex  id="messagewindow" ><div ng-repeat="msg in msgList" string-msg="msg"></div></div>
+    <div flex="none" flex-order="{{config.singleHandedlyLeft?'-1':'1'}}" ng-class="{keyboardBoxSingleHandedly:config.singleHandedly}"   layout="column" >
+        <div class="footInput" ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}" id="footInput" flex="none" layout="row">
+            <md-button ng-mobile-click="openConfig($event)"  class="md-icon-button" aria-label="settings">
+                <i class="material-icons">&#xE8B8;</i>
+            </md-button>
+            <input ng-mobile-click="inputClick()" flex type="text" placeholder="填写要发送的内容" ng-model="msg" ng-readonly="config.virtualKeyboard"  pattern="{{config.digitalKeyboard?'[0-9]*':''}}"     id="input_text" value=""/>
+            <md-button class="md-icon-button" ng-mobile-click="send(msg)" aria-label="send">
+                <i class="material-icons">&#xE31B;</i>
+            </md-button>
+        </div>
+        <div class="keyboard"  id="keyboard" flex="{{config.singleHandedly?'grow':'none'}}"  ng-class="{'keyboardShow':virtualKeyboardShow&&config.virtualKeyboard}"  layout="row" >
+            <div layout="column" ng-class="{'singleHandedly':config.singleHandedly}" flex >
+                <div flex layout="row">
+                    <md-button ng-mobile-click="kb(1)" flex>1</md-button>
+                    <md-button ng-mobile-click="kb(2)" flex>2</md-button>
+                    <md-button ng-mobile-click="kb(3)" flex>3</md-button>
+                </div>
+                <div flex layout="row">
+                    <md-button ng-mobile-click="kb(4)" flex>4</md-button>
+                    <md-button ng-mobile-click="kb(5)" flex>5</md-button>
+                    <md-button ng-mobile-click="kb(6)" flex>6</md-button>
+                </div>
+                <div flex layout="row">
+                    <md-button ng-mobile-click="kb(7)" flex>7</md-button>
+                    <md-button ng-mobile-click="kb(8)" flex>8</md-button>
+                    <md-button ng-mobile-click="kb(9)" flex>9</md-button>
+                </div>
+                <div flex layout="row"  ng-class="{singleHandedlyInput:config.singleHandedly&&config.singleHandedlyLeft}">
+                    <md-button ng-mobile-click="kb('empty')" flex><i class="material-icons">delete_sweep</i></md-button>
+                    <md-button ng-mobile-click="kb(0)" flex>0</md-button>
+                    <md-button ng-mobile-click="kb('backspace')" flex><i class="material-icons">backspace</i></md-button>
+                </div>
             </div>
         </div>
-        <div ng-if="config.singleHandedly&&config.singleHandedlyLeft" flex="100"></div>
+    </div>
+</div>
+<div class="translate" ng-show="!config.rotate">
+    <div id="google_translate_element"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');
+        }
+    </script>
+    <div class="inscript">
+        <p style="color:rgba(255,255,255,0.5);padding: 0;margin:0;"><button>点击加载翻译组件</button> 需正确上网姿势</p>
     </div>
 </div>
 <script type="text/ng-template" id="setIp">
@@ -124,13 +153,13 @@
                 <md-tabs flex="grow" md-selected="2"  md-stretch-tabs="always"  md-swipe-content md-enable-disconnect  md-center-tabs   md-border-bottom>
                     <md-tab label="系统设置">
                         <md-content class="md-padding">
-                            <form >
+                            <form>
 
                                 <md-switch ng-model="config.virtualKeyboard" aria-label="virtualKeyboard">
                                     使用虚拟键盘（仅数字）
                                 </md-switch>
                                 <md-switch ng-show="config.virtualKeyboard" ng-model="config.singleHandedly" aria-label="singleHandedly">
-                                    单手模式
+                                    单手模式 （适合横屏）
                                 </md-switch>
                                 <md-switch ng-show="config.virtualKeyboard" ng-model="config.singleHandedlyLeft" aria-label="singleHandedlyLeft">
                                     惯用左手
@@ -139,18 +168,19 @@
                                     使用数字键盘
                                 </md-switch>
 
-                                <md-switch ng-model="config.noEffect" aria-label="autoClear">
+                                <md-switch ng-model="config.noEffect" aria-label="noEffect">
                                     低特效 (微弱的提高性能 大概)
                                 </md-switch>
 
-
+                                <md-switch ng-model="config.rotate" aria-label="rotate">
+                                    强制转屏 (实验性功能 直接将body旋转90度)
+                                </md-switch>
+                                <md-switch ng-show="config.rotate" ng-model="config.rotate90" aria-label="rotate">
+                                    倒过来转
+                                </md-switch>
                                 <md-switch ng-model="config.autoClear" aria-label="autoClear">
                                     自动清理历史信息
                                 </md-switch>
-
-
-
-
                                 <md-input-container class="md-block" ng-show="config.autoClear">
                                     <label>清理超过多少行的数据</label>
                                     <input ng-model="config.autoClearNumber" type="text" pattern="[0-9]*">
@@ -332,7 +362,7 @@
                     </md-tab>
                     <md-tab label="关于">
                         <md-content class="md-padding" >
-                            <h3>ERA 网页版客户端</h3>
+                            <h3>ERA 网页版客户端 1.3.0</h3>
                             <p>
                                 配合 <code>♡+.史莱姆|</code> 开发的服务端使用
                             </p>
@@ -392,29 +422,12 @@
 <script src="./res/js/angular-websocket.min.js"></script>
 <script src="./res/js/angular-material.min.js"></script>
 <script src="./res/js/fastclick.js"></script>
-<script src="./res/js/app.js"></script>
-
-
-<div class="translate">
-    <div id="google_translate_element"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ja', includedLanguages: 'en,zh-CN,zh-TW', layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, autoDisplay: false, multilanguagePage: true}, 'google_translate_element');
-        }
-    </script>
-
-
-
-
-    <div class="inscript">
-        <p style="color:rgba(255,255,255,0.5);padding: 0;margin:0;"><button>加载google翻译组件</button> 需正确上网姿势</p>
-    </div>
-
-</div>
+<script src="./res/js/app.js?6"></script>
 <script>
 $('.inscript button').click(function(){
     $('.inscript').html('<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></'+'script>')
 });
+
 </script>
 
 </body>

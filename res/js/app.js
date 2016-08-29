@@ -7,11 +7,33 @@ function isPhone(){
     }
     return false;
 }
+
+function iosV(){
+    var agent = navigator.userAgent.toLowerCase() ;
+    var version;
+    if(agent.indexOf("like mac os x") > 0){
+        //ios
+        var regStr_saf = /os [\d._]*/gi ;
+        var verinfo = agent.match(regStr_saf) ;
+        version = (verinfo+"").replace(/[^0-9|_.]/ig,"").replace(/_/ig,".");
+    }
+
+    var version_str = version+"";
+    if(version_str != "undefined" && version_str.length >0){
+        version=version.substring(0,1);
+        return version;
+    }
+    return false;
+}
+
+
 var app = angular.module( 'app', [ 'ngMaterial','ngWebSocket'] );
-app.run(function() {
+app.run(function($timeout) {
         FastClick.attach($('.cli').get(0));
         $('.cli').on("click","span[i]", function(event){
-            buttonSend($(this).attr('i'));
+            var $this = $(this);
+            buttonSend($this.attr('i'));
+            $this.addClass('onclick');
             event.stopPropagation();
             return false;
         });
@@ -23,8 +45,6 @@ app.directive('stringMsg' , function($compile){
     return function(scope , el , attr){
         if(attr.stringMsg){
             scope.$watch(attr.stringMsg , function(html){
-
-
                 html.msg = "<div>"+html.msg+"</div>";
                 var msg = html.msg
                     .replace(/<a/g, "<span")
@@ -37,7 +57,6 @@ app.directive('stringMsg' , function($compile){
         }
     };
 });
-
 app.directive('c' , function(){
     return function(scope , el , attr){
         if(attr.c){
@@ -45,7 +64,6 @@ app.directive('c' , function(){
         }
     };
 });
-
 app.directive("ngMobileClick", [function () {
     return function (scope, elem, attrs) {
         elem.bind("touchend click", function (e) {
@@ -55,8 +73,41 @@ app.directive("ngMobileClick", [function () {
         });
     }
 }]);
-   app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket) {
 
+
+app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,$window) {
+
+    $scope.winRotateCss = {};
+    $scope.standalone=false;
+    if (
+        ("standalone" in window.navigator) &&
+        window.navigator.standalone
+    ){
+        $scope.standalone=true;
+    }
+    angular.element($window).bind('resize', function() {
+        $scope.onresize();
+        $scope.$apply();
+    });
+    angular.element($window).bind('orientationchange', function() {
+        $scope.onresize();
+        $scope.$apply();
+    });
+    $scope.onresize = function(){
+        var w = angular.element($window);
+        $scope.windowHeight = w.height()
+        $scope.windowWidth = w.width()
+        if($scope.config.rotate){
+            $scope.winRotateCss['width']  = $scope.windowHeight;
+            $scope.winRotateCss['height'] = $scope.windowWidth;
+            $scope.winRotateCss['margin-left'] = 0-($scope.windowHeight-$scope.windowWidth)/2;
+            $scope.winRotateCss['margin-top']  = 0-($scope.windowWidth-$scope.windowHeight)/2;
+        }else{
+            $scope.winRotateCss['width']  = $scope.windowWidth ;
+            $scope.winRotateCss['height'] = $scope.windowHeight;
+            $scope.winRotateCss['margin'] = '0 auto';
+        }
+    };
         $scope.msgList = [];
         var io = $scope.io = null;
         function echo(type, msg,noapply){
@@ -157,6 +208,8 @@ app.directive("ngMobileClick", [function () {
             'singleHandedlyLeft':false,
             'noEffect':false,
             'lineHeight':0,
+            'rotate':false,
+            'rotate90':false,
             'letterSpacing':-1,
             'color':{
                 'background' : {r:50,g:50,b:50},
@@ -200,10 +253,12 @@ app.directive("ngMobileClick", [function () {
                             localStorage.setItem("config", JSON.stringify($scopeIn.config));
                         }
                         $scope.config = JSON.parse(JSON.stringify($scopeIn.config ));
+                        $scope.onresize();
                         $mdDialogIn.cancel();
                     };
                     $scopeIn.cancel = function() {
                         $scope.config =  JSON.parse(JSON.stringify($scopeIn.old ));
+                        $scope.onresize();
                         $mdDialogIn.cancel();
                     };
                     $scopeIn.emptyServerList = function(){
@@ -316,7 +371,7 @@ app.directive("ngMobileClick", [function () {
            if(keycode==13){
                $scope.send($scope.msg);
            }
-       }
+       };
 
 
        echo("sys",'<i class="material-icons" style="color:#03a9f4">info_outline</i> 系统初始化完毕',true);
@@ -329,5 +384,5 @@ app.directive("ngMobileClick", [function () {
        }else{
            $scope.openSetIp();
        }
-
+        $scope.onresize();
    });

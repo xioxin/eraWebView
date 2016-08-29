@@ -29,7 +29,6 @@ function iosV(){
 
 var app = angular.module( 'app', [ 'ngMaterial','ngWebSocket'] );
 app.run(function($timeout) {
-        FastClick.attach($('.cli').get(0));
         $('.cli').on("click","span[i]", function(event){
             var $this = $(this);
             buttonSend($this.attr('i'));

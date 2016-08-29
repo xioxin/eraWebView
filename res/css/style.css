@@ -6,6 +6,10 @@ html{
     overflow: hidden;
     touch-action: manipulation;
     -ms-touch-action: manipulation;
+     user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    -moz-user-select:none;
 }
 body{
     background: #333;

@@ -7,6 +7,32 @@ function isPhone(){
     }
     return false;
 }
+var ledT = $('.led-t');
+var ledB = $('.led-b');
+var ltt=false;
+var lbt=false;
+function led(type){
+    if(type=='t'){
+        ledT.addClass('flash');
+        if(ltt){
+            clearTimeout(ltt);
+            ltt=false;
+        }
+        ltt = setTimeout(function(){
+            ledT.removeClass('flash');
+        },150);
+    }else{
+        ledB.addClass('flash');
+        if(lbt){
+            clearTimeout(lbt);
+            lbt=false;
+        }
+        lbt = setTimeout(function(){
+            ledB.removeClass('flash');
+        },150);
+    }
+}
+
 
 function iosV(){
     var agent = navigator.userAgent.toLowerCase() ;
@@ -17,7 +43,6 @@ function iosV(){
         var verinfo = agent.match(regStr_saf) ;
         version = (verinfo+"").replace(/[^0-9|_.]/ig,"").replace(/_/ig,".");
     }
-
     var version_str = version+"";
     if(version_str != "undefined" && version_str.length >0){
         version=version.substring(0,1);
@@ -29,13 +54,7 @@ function iosV(){
 
 var app = angular.module( 'app', [ 'ngMaterial','ngWebSocket'] );
 app.run(function($timeout) {
-        //$('.cli').on("click","span[i]", function(event){
-        //    var $this = $(this);
-        //    buttonSend($this.attr('i'));
-        //    $this.addClass('onclick');
-        //    event.stopPropagation();
-        //    return false;
-        //});
+
     });
 
 
@@ -56,13 +75,6 @@ app.directive('stringMsg' , function($compile){
         }
     };
 });
-app.directive('c' , function(){
-    return function(scope , el , attr){
-        if(attr.c){
-            console.log(el);
-        }
-    };
-});
 app.directive("ngMobileClick", [function () {
     return function (scope, elem, attrs) {
         elem.bind("touchend click", function (e) {
@@ -72,16 +84,15 @@ app.directive("ngMobileClick", [function () {
         });
     }
 }]);
-app.directive("ngMobileClick2", [function () {
+app.directive("ngMobileClickR", [function () {
     return function (scope, elem, attrs) {
-        elem.bind("touchend", function (e) {
-            scope.$apply(attrs["ngMobileClick"]);
+        elem.bind("touchend click", function (e) {
+            scope.$apply(attrs["ngMobileClickR"]);
         });
     }
 }]);
 
-app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,$window) {
-
+app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,$window,$timeout) {
     $scope.winRotateCss = {};
     $scope.standalone=false;
     if (
@@ -105,8 +116,7 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
         if($scope.config.rotate){
             $scope.winRotateCss['width']  = $scope.windowHeight;
             $scope.winRotateCss['height'] = $scope.windowWidth;
-            $scope.winRotateCss['margin-left'] = 0-($scope.windowHeight-$scope.windowWidth)/2;
-            $scope.winRotateCss['margin-top']  = 0-($scope.windowWidth-$scope.windowHeight)/2;
+            $scope.winRotateCss['margin'] = (0-($scope.windowWidth-$scope.windowHeight)/2)+'px '+(0-($scope.windowHeight-$scope.windowWidth)/2)+'px';
         }else{
             $scope.winRotateCss['width']  = $scope.windowWidth ;
             $scope.winRotateCss['height'] = $scope.windowHeight;
@@ -128,16 +138,18 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
         }
         function webclient_init (wsurl){
             echo("sys",'<i class="material-icons" style="color:#03a9f4">info_outline</i> 尝试连接服务器',true);
-
             io = $scope.io = $websocket(wsurl);
             io.onMessage(function(message) {
+                led('b');
                 echo("text", message.data);
             });
             io.onOpen(function(message) {
+                led('b');
                 //console.log(message);
                 addSaver($scope.server.ip+':'+ $scope.server.port);
                 echo("sys",'<i class="material-icons" style="color:#03a9f4">info_outline</i> 已建立连接');
                 io.send('ErAXiN');
+                led('t');
             });
             io.onClose(function(message) {
                 //console.log(message);
@@ -161,8 +173,6 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                 $scope.openSetIp();
             });
         }
-
-
        $scope.kb=function(n){
            if(isNaN(n)){
                if(n=='empty'){
@@ -174,7 +184,6 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                $scope.msg+=''+n;
            }
        }
-
        function addSaver(wsurl){
 
            if(window.localStorage) {
@@ -258,7 +267,9 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                             localStorage.setItem("config", JSON.stringify($scopeIn.config));
                         }
                         $scope.config = JSON.parse(JSON.stringify($scopeIn.config ));
-                        $scope.onresize();
+                        $timeout(function(){
+                            $scope.onresize();
+                        });
                         $mdDialogIn.cancel();
                     };
                     $scopeIn.cancel = function() {
@@ -340,12 +351,14 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                 }else{
                     io.send('\0');
                 }
+                led('t');
                 $scope.msg = ''
             }
         }
        $scope.send0 = function(){
            if(io){
                io.send('\0');
+               led('t');
            }
        };
        $scope.buttonSend = function(msg,$event){
@@ -356,6 +369,7 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                }else{
                    io.send('\0');
                }
+               led('t');
            }
            $event.stopPropagation();
        }
@@ -367,6 +381,7 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                }else{
                    io.send('\0');
                }
+               led('t');
            }
            $scope.$apply();
        };

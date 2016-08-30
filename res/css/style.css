@@ -217,10 +217,28 @@ form p{
     border-radius: 3px ;
 
 }
-
-
-
-/*
-
-
-*/
+.led{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+    pointer-events:none;
+    font-size: 12px;
+    letter-spacing: -5px;
+}
+.led span{
+    color:rgba(255,255,255,1);
+    opacity: 0.3;
+}
+.led span.flash{
+    opacity: 0.8;
+}
+.cliBox{
+    height: 100%;
+    position: relative;
+}
+.keyboardBox{
+    position: relative;
+    z-index: 1;
+}

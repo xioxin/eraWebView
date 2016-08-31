@@ -242,3 +242,12 @@ form p{
     position: relative;
     z-index: 1;
 }
+.preview{
+    padding: 8px;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    height: 400px;
+    max-width: 500px;
+    margin: 0 auto;
+}

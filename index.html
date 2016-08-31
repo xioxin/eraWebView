@@ -131,10 +131,17 @@
                 </md-content>
             </md-dialog-content>
             <md-dialog-actions layout="row">
+                <div flex="none">
+                    <md-button ng-click="openConfig($event)">
+                        设置
+                    </md-button>
+                </div>
                 <span flex></span>
-                <md-button ng-click="save()">
-                    完成
-                </md-button>
+                <div flex="none">
+                    <md-button ng-click="save()">
+                        完成
+                    </md-button>
+                </div>
             </md-dialog-actions>
         </form>
     </md-dialog>
@@ -372,7 +379,7 @@
                                 配合 <code>♡+.史莱姆|</code> 开发的服务端使用
                             </p>
                             <div>
-                            
+                                <iframe src="http://preview.coding.io/u/xin/p/era.html" class="preview" frameborder="0"></iframe>
                             </div>
                             <h5>用到的组件</h5>
                             <ul style="color: rgba(0, 0, 0, 0.35);">
@@ -381,9 +388,7 @@
                                 <li>Angular Material</li>
                                 <li>fastclick</li>
                             </ul>
-                            <md-button class="md-raised" href="https://github.com/xioxin/eraWebView" md-autofocus target="_blank">Fork me on github</md-button>
-                            <p style="text-align: right;"> Xin</p>
-
+                            <p style="text-align: right;">By. Xin</p>
                         </md-content>
                     </md-tab>
                 </md-tabs>

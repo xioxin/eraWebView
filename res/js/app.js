@@ -138,7 +138,7 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
         }
         function webclient_init (wsurl){
             echo("sys",'<i class="material-icons" style="color:#03a9f4">info_outline</i> 尝试连接服务器',true);
-            io = $scope.io = $websocket(wsurl);
+            window.io = io = $scope.io = $websocket(wsurl);
             io.onMessage(function(message) {
                 led('b');
                 echo("text", message.data);
@@ -154,11 +154,13 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
             io.onClose(function(message) {
                 //console.log(message);
                 echo("sys",'<i class="material-icons" style="color:#f43f1c">error_outline</i> 连接已断开');
+                var io = $scope.io = false;
                 ioerr();
             });
             io.onError(function(message) {
                 //console.log(message);
                 echo("sys",'<i class="material-icons" style="color:#f43f1c">error_outline</i> 连接失败');
+                var io = $scope.io = false;
             });
         }
         function ioerr(){
@@ -241,6 +243,8 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
            $scope.config = JSON.parse(JSON.stringify(defaultConfig));
        }
         $scope.openConfig = function(ev) {
+            // console.log('openConfig');
+            // $mdDialog.cancel();
             $mdDialog.show({
                 controller:['$scope', '$mdDialog', function($scopeIn, $mdDialogIn){
                     if(window.localStorage) {
@@ -289,14 +293,20 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                 targetEvent: ev,
                 clickOutsideToClose:true,
                 escapeToClose:true,
-                fullscreen:true
-            });
+                fullscreen:true,
+                onRemoving:function(){
+                    console.log('onRemoving');
+                    if(!io||(io&&io.readyState!=1)){
+                        $scope.openSetIp();
+                    }
+                }
+            })
         };
         $scope.openSetIp = function(ev) {
             $mdDialog.show({
                 controller:['$scope', '$mdDialog', function($scopeIn, $mdDialogIn){
 
-
+                    $scopeIn.openConfig = $scope.openConfig;
                     if(window.localStorage) {
                         if (localStorage.getItem('serverList')) {
                             $scopeIn.serverList = JSON.parse(localStorage.getItem('serverList'));
@@ -322,16 +332,14 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                         //todo：连接服务器
                         $location.hash( $scope.server.ip+':'+ $scope.server.port);
                         webclient_init('ws://'+ $scope.server.ip+':'+ $scope.server.port);
-                        $mdDialog.show(
-                            $mdDialog.alert()
-                                .parent(angular.element(document.body))
-                                .clickOutsideToClose(true)
-                                .title('提示：')
-                                .textContent('你现在可以吧该页面保存到书签，下次打开将不再需要输入服务器地址')
-                                .ok('知道啦')
-                        );
-
-
+                        // $mdDialog.show(
+                        //     $mdDialog.alert()
+                        //         .parent(angular.element(document.body))
+                        //         .clickOutsideToClose(true)
+                        //         .title('提示：')
+                        //         .textContent('你现在可以吧该页面保存到书签，下次打开将不再需要输入服务器地址')
+                        //         .ok('知道啦')
+                        // );
                         $mdDialogIn.cancel();
                     };
                 }],
@@ -342,7 +350,6 @@ app.controller("con", function($scope, $mdDialog, $mdMedia,$location,$websocket,
                 escapeToClose:false
             });
         };
-
         $scope.msg = '';
         $scope.send = function(msg){
             if(io){

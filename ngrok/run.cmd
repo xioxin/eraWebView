@@ -1,7 +1,8 @@
 @echo off
 chcp 936
 echo.
-set /p input=ÇëÆğÒ»¸öÓ¢ÎÄÃû×Ö: 
-set /p port=ÇëÊäÈë¶Ë¿Ú: 
 
-ngrok -config=ngrok.cfg -subdomain %input% %port%
+set port=9000
+set /p port=è¯·è¾“å…¥ç«¯å£(é»˜è®¤9000): 
+
+ngrok -config=ngrok.cfg -proto=tcp %port%
